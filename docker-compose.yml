@@ -84,9 +84,9 @@ services:
     image: quay.io/jember.ai/streamlit-chat:${CHAT_IMAGE_TAG:-latest}
     restart: always
     environment:
-      - EMBEDDING_MODEL=text-embedding-3-small 
-      - LLM_MODEL=gpt-4-turbo
-      - OPENAI_API_KEY=sk-
+      - EMBEDDING_MODEL=${CHAT_EMBEDDING_MODEL}
+      - LLM_MODEL=${CHAT_LLM_MODEL}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
       - DATA_INTAKE_URL=${GATEWAY_SERVER_URI}
       - DATA_INTAKE_CLIENT_ID=${JEMBER_CLIENT}
       - DATA_INTAKE_CLIENT_SECRET=${JEMBER_SECRET}

@@ -1,5 +1,5 @@
-# jember-deploy
-Deployment for jember.ai
+# jember-compose
+Docker Compose for jember.ai
 
 ## Get Running
 
@@ -41,3 +41,9 @@ docker compose -f docker-compose.yml up -d
 ```
 docker compose down
 ```
+
+## Services
+
+Data Intake OA3 Docs - [http://localhost:8080/data-intake-oa3/](http://localhost:8080/data-intake-oa3/)
+
+Demo Streamlit Chat - [http://localhost:8080/chat/](http://localhost:8080/chat/)
