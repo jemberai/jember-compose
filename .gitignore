@@ -2,3 +2,5 @@
 .env
 volumes/
 db/
+*.iml
+.idea/
