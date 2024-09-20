@@ -1,0 +1,73 @@
+name: Create GitHub Release
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
+on:
+  workflow_dispatch:
+  push:
+    branches: ['main'] # main branch only.
+    paths-ignore:
+      - '**.md'
+      - '.idea/**/*'
+      - '.mvn/**/*'
+      - 'mvnw'
+      - 'mvnw.cmd'
+      - '.vscode/**/*'
+      - '**/.env.example'
+      - '.github/ISSUE_TEMPLATE/**/*'
+      - '.github/CODEOWNERS'
+      - '.github/workflows/**/*'
+jobs:
+  create_release:
+    name: Push image to quay
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: write
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@main
+
+      - name: Bump version and push tag
+        id: bump
+        uses: anothrNick/github-tag-action@v1 # Don't use @master or @v1 unless you're happy to test the latest version
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WITH_V: false
+
+      - name: Generate changelog
+        id: changelog
+        uses: metcalfc/changelog-generator@v4.3.1
+        with:
+          myToken: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          body: |
+            ### Things that changed in this release
+            ${{ steps.changelog.outputs.changelog }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag_name: ${{ steps.bump.outputs.new_tag }}
+      - name: Send custom JSON data to Slack workflow
+        id: slack
+        uses: slackapi/slack-github-action@v1.27.0
+        with:
+          payload: |
+            {
+              "text": "GitHub Action build result: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "GitHub Action - Jember Compose Release: ${{ steps.bump.outputs.new_tag }}\n Job Status: ${{ job.status }}\n <https://github.com/jemberai/jember-compose/releases/tag/${{ steps.bump.outputs.new_tag }}|Release Information>\n\n <${{ github.event.pull_request.html_url || github.event.head_commit.url }}|Commit Ref>"
+                  }
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_CICD_WEBHOOK_URL }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK

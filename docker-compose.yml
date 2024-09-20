@@ -1,5 +1,4 @@
-version: '3.9'
-
+name: jember-ai
 services:
   api-gateway:
     container_name: api-gateway
@@ -13,16 +12,12 @@ services:
       - AUTH_SERVER_PORT=${AUTH_SERVER_PORT}
       - DATA_INTAKE_SERVER=${INTAKE_SERVER}
       - DATA_INTAKE_SERVER_PORT=${INTAKE_SERVER_PORT}
-      - DATA_INTAKE_OA3_SERVER=${OA3_SERVER}
-      - DATA_INTAKE_OA3_SERVER_PORT=${OA3_SERVER_PORT}
       - CHAT_SERVER=${CHAT_SERVER}
       - CHAT_SERVER_PORT=${CHAT_SERVER_PORT}
       - SERVER_PORT=${GATEWAY_SERVER_PORT}
       - LOG_LEVEL=${GATEWAY_LOG_LEVEL}
     depends_on:
       - auth-server
-      # - data-intake
-      - oa3-docs
     ports:
       - ${GATEWAY_SERVER_PORT}:${GATEWAY_SERVER_PORT}
 
@@ -48,41 +43,43 @@ services:
       - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE}
       - SERVER_PORT=${INTAKE_SERVER_PORT}
       - OPENAI_API_KEY=${OPENAI_API_KEY}
-      - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL}
-      - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
-      - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
-      - SPRING_FLYWAY_URL=${SPRING_FLYWAY_URL}
-      - SPRING_FLYWAY_USER=${SPRING_FLYWAY_USER}
-      - SPRING_FLYWAY_PASSWORD=${SPRING_FLYWAY_PASSWORD}
-      - ORG_JEMBERAI_DATASOURCE_PRIMARY_URL=${SPRING_DATASOURCE_URL}
-      - ORG_JEMBERAI_DATASOURCE_PRIMARY_USERNAME=${SPRING_DATASOURCE_USERNAME}
-      - ORG_JEMBERAI_DATASOURCE_PRIMARY_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
-      - ORG_JEMBERAI_DATASOURCE_PRIMARY_DRIVER-CLASS-NAME=org.postgresql.Driver
-      - ORG_JEMBERAI_JPA_PRIMARY_HIBERNATE_DDL-AUTO=validate
-      - ORG_JEMBERAI_DATASOURCE_KEYSTORE_URL=${SPRING_DATASOURCE_URL}
-      - ORG_JEMBERAI_DATASOURCE_KEYSTORE_USERNAME=${SPRING_DATASOURCE_USERNAME}
-      - ORG_JEMBERAI_DATASOURCE_KEYSTORE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
-      - ORG_JEMBERAI_DATASOURCE_KEYSTORE_DRIVER-CLASS-NAME=org.postgresql.Driver
-      - ORG_JEMBERAI_JPA_KEYSTORE_HIBERNATE_DDL-AUTO=validate
-      - ORG_JEMBERAI_DATASOURCE_KEYSTORE-FLYWAY_URL=${SPRING_FLYWAY_URL}
-      - ORG_JEMBERAI_DATASOURCE_KEYSTORE-FLYWAY_USERNAME=${SPRING_FLYWAY_USER}
-      - ORG_JEMBERAI_DATASOURCE_KEYSTORE-FLYWAY_PASSWORD=${SPRING_FLYWAY_PASSWORD}
-      - ORG_JEMBERAI_DATASOURCE_KEYSTORE-FLYWAY_DRIVER-CLASS-NAME=org.postgresql.Driver
-      - SPRING_AI_VECTORSTORE_MILVUS_CLIENT_HOST=${SPRING_AI_VECTORSTORE_MILVUS_CLIENT_HOST}
-      - SPRING_AI_VECTORSTORE_MILVUS_CLIENT_PORT=${SPRING_AI_VECTORSTORE_MILVUS_CLIENT_PORT}
-      - SPRING_AI_VECTORSTORE_MILVUS_CLIENT_USERNAME=${SPRING_AI_VECTORSTORE_MILVUS_CLIENT_USERNAME}
-      - SPRING_AI_VECTORSTORE_MILVUS_CLIENT_PASSWORD=${SPRING_AI_VECTORSTORE_MILVUS_CLIENT_PASSWORD}
-      
+      - SPRING_FLYWAY_ENABLED=false
 
-  oa3-docs:
-    container_name: oa3-docs
-    image: quay.io/jember.ai/jember-oa3:${OA3_IMAGE_TAG:-latest}
-    restart: always
+      - ORG_JEMBERAI_DATASOURCE_PRIMARY_URL=${ORG_JEMBERAI_DATASOURCE_PRIMARY_URL}
+      - ORG_JEMBERAI_DATASOURCE_PRIMARY_USERNAME=${ORG_JEMBERAI_DATASOURCE_PRIMARY_USERNAME}
+      - ORG_JEMBERAI_DATASOURCE_PRIMARY_PASSWORD=${ORG_JEMBERAI_DATASOURCE_PRIMARY_PASSWORD}
+      - ORG_JEMBERAI_DATASOURCE_PRIMARY_DRIVER_CLASS_NAME=${DRIVER_CLASS_NAME}
+      - ORG_JEMBERAI_JPA_PRIMARY_HIBERNATE_DDLAUTO=${HIBERNATE_DDL_AUTO}
+
+      - ORG_JEMBERAI_DATASOURCE_PRIMARYFLYWAY_URL=${ORG_JEMBERAI_DATASOURCE_PRIMARY_FLYWAY_URL}
+      - ORG_JEMBERAI_DATASOURCE_PRIMARYFLYWAY_USERNAME=${ORG_JEMBERAI_DATASOURCE_PRIMARY_FLYWAY_USERNAME}
+      - ORG_JEMBERAI_DATASOURCE_PRIMARYFLYWAY_PASSWORD=${ORG_JEMBERAI_DATASOURCE_PRIMARY_FLYWAY_PASSWORD}
+      - ORG_JEMBERAI_DATASOURCE_PRIMARYFLYWAY_DRIVERCLASSNAME=${DRIVER_CLASS_NAME}
+
+      - ORG_JEMBERAI_DATASOURCE_KEYSTORE_URL=${ORG_JEMBERAI_DATASOURCE_KEYSTORE_URL}
+      - ORG_JEMBERAI_DATASOURCE_KEYSTORE_USERNAME=${ORG_JEMBERAI_DATASOURCE_KEYSTORE_USERNAME}
+      - ORG_JEMBERAI_DATASOURCE_KEYSTORE_PASSWORD=${ORG_JEMBERAI_DATASOURCE_KEYSTORE_PASSWORD}
+      - ORG_JEMBERAI_DATASOURCE_KEYSTORE_DRIVERCLASSNAME=${DRIVER_CLASS_NAME}
+      - ORG_JEMBERAI_JPA_KEYSTORE_HIBERNATE_DDLAUTO=${HIBERNATE_DDL_AUTO}
+
+      - ORG_JEMBERAI_DATASOURCE_KEYSTOREFLYWAY_URL=${ORG_JEMBERAI_DATASOURCE_KEYSTORE_FLYWAY_URL}
+      - ORG_JEMBERAI_DATASOURCE_KEYSTOREFLYWAY_USERNAME=${ORG_JEMBERAI_DATASOURCE_KEYSTORE_FLYWAY_USERNAME}
+      - ORG_JEMBERAI_DATASOURCE_KEYSTOREFLYWAY_PASSWORD=${ORG_JEMBERAI_DATASOURCE_KEYSTORE_FLYWAY_PASSWORD}
+      - ORG_JEMBERAI_DATASOURCE_KEYSTOREFLYWAY_DRIVERCLASSNAME=${DRIVER_CLASS_NAME}
+
+      - ORG_JEMBERAI_SPRING_AI_VECTORSTORE_MILVUS_CLIENT_HOST=${ORG_JEMBERAI_SPRING_AI_VECTORSTORE_MILVUS_CLIENT_HOST}
+      - ORG_JEMBERAI_SPRING_AI_VECTORSTORE_MILVUS_CLIENT_PORT=${ORG_JEMBERAI_SPRING_AI_VECTORSTORE_MILVUS_CLIENT_PORT}
+      - ORG_JEMBERAI_SPRING_AI_VECTORSTORE_MILVUS_CLIENT_USERNAME=${ORG_JEMBERAI_SPRING_AI_VECTORSTORE_MILVUS_CLIENT_USERNAME}
+      - ORG_JEMBERAI_SPRING_AI_VECTORSTORE_MILVUS_CLIENT_PASSWORD=${ORG_JEMBERAI_SPRING_AI_VECTORSTORE_MILVUS_CLIENT_PASSWORD}
+    depends_on:
+      - auth-server
+      - postgres
+      - milvus
 
   streamlit-chat:
     container_name: streamlit-chat
     image: quay.io/jember.ai/streamlit-chat:${CHAT_IMAGE_TAG:-latest}
-    restart: always
+    #restart: always
     environment:
       - EMBEDDING_MODEL=${CHAT_EMBEDDING_MODEL}
       - LLM_MODEL=${CHAT_LLM_MODEL}
@@ -91,12 +88,94 @@ services:
       - DATA_INTAKE_CLIENT_ID=${JEMBER_CLIENT}
       - DATA_INTAKE_CLIENT_SECRET=${JEMBER_SECRET}
       - DATA_INTAKE_ACCESS_TOKEN=
+      - DATA_INTAKE_USE_SSL=${CHAT_DATA_INTAKE_USE_SSL}
       - CHAT_TITLE=JemberAI Chat
       - CHAT_LOGO=https://avatars.githubusercontent.com/u/175445266
       - CHAT_PROMPT_LABEL=Message JemberAI Chat
       - CHAT_FAVICON=":left_speech_bubble:"
       - CHAT_INITIAL_QUESTION=Welcome to JemberAI Chat how can I help you?
+  #  depends_on:
+  #    - data-intake
 
+  attu:
+    container_name: attu
+    restart: always
+    image: zilliz/attu:v2.3.10
+    ports:
+      - 8887:3000
+    environment:
+      - MILVUS_URL=milvus:19530
+
+  dozzle:
+    container_name: dozzle
+    image: amir20/dozzle:latest
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - 8888:8080
+
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    restart: always
+    ports:
+      - "8889:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: dev@jember.ai
+      PGADMIN_DEFAULT_PASSWORD: password
+
+  postgres:
+    container_name: postgres
+    image: postgres:${POSTGRES_IMAGE_TAG:-14-alpine}
+    restart: always
+    ports:
+      - 5432:5432
+    volumes:
+      - ./cfg/postgres/initdb:/docker-entrypoint-initdb.d
+      # - ./db/postgres/data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=postgres
+
+  etcd:
+    container_name: etcd
+    image: quay.io/coreos/etcd:v3.5.0
+    environment:
+      - ETCD_AUTO_COMPACTION_MODE=revision
+      - ETCD_AUTO_COMPACTION_RETENTION=1000
+      - ETCD_QUOTA_BACKEND_BYTES=4294967296
+    volumes:
+      - ${DOCKER_VOLUME_DIRECTORY:-.}/volumes/etcd:/etcd
+    command: etcd -advertise-client-urls=http://127.0.0.1:2379 -listen-client-urls http://0.0.0.0:2379 --data-dir /etcd
+
+  minio:
+    container_name: minio
+    image: minio/minio:RELEASE.2020-12-03T00-03-10Z
+    environment:
+      MINIO_ACCESS_KEY: minioadmin
+      MINIO_SECRET_KEY: minioadmin
+    volumes:
+      - ${DOCKER_VOLUME_DIRECTORY:-.}/volumes/minio:/minio_data
+    command: minio server /minio_data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+
+  milvus:
+    container_name: milvus
+    image: milvusdb/milvus:v2.0.2
+    command: ["milvus", "run", "standalone"]
+    environment:
+      ETCD_ENDPOINTS: etcd:2379
+      MINIO_ADDRESS: minio:9000
+    volumes:
+      - ${DOCKER_VOLUME_DIRECTORY:-.}/volumes/milvus:/var/lib/milvus
+    ports:
+      - "19530:19530"
+    depends_on:
+      - "etcd"
+      - "minio"
 networks:
   default:
     name: jember
