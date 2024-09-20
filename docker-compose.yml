@@ -87,7 +87,8 @@ services:
       - DATA_INTAKE_URL=${GATEWAY_SERVER_URI}
       - DATA_INTAKE_CLIENT_ID=${JEMBER_CLIENT}
       - DATA_INTAKE_CLIENT_SECRET=${JEMBER_SECRET}
-#      - DATA_INTAKE_ACCESS_TOKEN=
+      - DATA_INTAKE_ACCESS_TOKEN=
+      - DATA_INTAKE_USE_SSL=${CHAT_DATA_INTAKE_USE_SSL}
       - CHAT_TITLE=JemberAI Chat
       - CHAT_LOGO=https://avatars.githubusercontent.com/u/175445266
       - CHAT_PROMPT_LABEL=Message JemberAI Chat
