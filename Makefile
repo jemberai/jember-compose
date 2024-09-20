@@ -1,8 +1,8 @@
 up:
-	docker compose -f docker-compose.infra.yml -f docker-compose.yml up -d
+	docker compose -f docker-compose.yml up -d
 
 down:
-	docker compose -f docker-compose.infra.yml -f docker-compose.yml down
+	docker compose -f docker-compose.yml down
 
 resetdb:
 	rm -rf ${PWD}/db/postgres/data/*

@@ -29,7 +29,7 @@ make down
 
 #### Startup with tools
 ```
-docker compose -f docker-compose.infra.yml -f docker-compose.yml up -d
+docker compose -f docker-compose.yml up -d
 ```
 
 #### Startup without tools
